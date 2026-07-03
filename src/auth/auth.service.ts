@@ -1,6 +1,7 @@
 import {
   ConflictException,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { SignupDto } from './dto/signup.dto';
@@ -80,15 +81,32 @@ export class AuthService {
       throw new UnauthorizedException('Invalid Credentials');
     }
 
-    const { accessToken } = await this.generateTokens(user.id, false);
+    const { accessToken, refreshToken } = await this.generateTokens(user.id);
 
     return {
       user,
       accessToken,
+      refreshToken,
     };
   }
 
-  //   async refresh(refreshDto: RefreshDto) {
-  //     const accessToken = this.generateTokens(,false);
-  //   }
+  async refresh(refreshDto: RefreshDto) {
+    Logger.log(refreshDto.refreshToken);
+    try {
+      const payload = await this.jwtService.verifyAsync(
+        refreshDto.refreshToken,
+        {
+          secret: this.configService.get('JWT_REFRESH_SECRET'),
+        },
+      );
+      const accessToken = await this.generateTokens(payload.userId, false);
+      return accessToken;
+    } catch (err: any) {
+      Logger.log(err);
+      if (err.name == 'TokenExpiredError') {
+        throw new UnauthorizedException('Token expired');
+      }
+      throw new UnauthorizedException('Invalid token');
+    }
+  }
 }
