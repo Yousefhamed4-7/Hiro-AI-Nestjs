@@ -140,7 +140,7 @@ export class WorkoutPlansService {
         });
       }
 
-      const updated = tx.workoutPlan.update({
+      const updated = await tx.workoutPlan.update({
         where: { id },
         data: {
           ...planData,

@@ -33,7 +33,10 @@ export interface WorkoutPlanInterface {
   exercises: ExercisesInterface[];
 }
 
-export interface UnformattedWorkoutPlanInterface extends WorkoutPlanInterface {
+export interface UnformattedWorkoutPlanInterface extends Omit<
+  WorkoutPlanInterface,
+  'exercises'
+> {
   workoutPlanExercises: {
     exerciseId: number;
     workoutPlanId: number;

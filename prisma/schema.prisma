@@ -56,13 +56,13 @@ model MealPlan {
 }
 
 model MealPlanItem {
+  id Int @id @default(autoincrement())
+
   mealPlanId Int
   mealPlan   MealPlan @relation(fields: [mealPlanId], references: [id], onDelete: Cascade)
 
   mealItemId Int
   mealItem   MealItem @relation(fields: [mealItemId], references: [id], onDelete: Cascade)
-
-  @@id([mealPlanId, mealItemId])
 }
 
 model MealItem {

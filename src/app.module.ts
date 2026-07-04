@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { validateEnv } from './common/config/env.validation';
 import { WorkoutPlansModule } from './workout-plans/workout-plans.module';
 import { ExercisesModule } from './exercises/exercises.module';
+import { MealPlansModule } from './meal-plans/meal-plans.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ExercisesModule } from './exercises/exercises.module';
     PrismaModule,
     WorkoutPlansModule,
     ExercisesModule,
+    MealPlansModule,
   ],
   controllers: [AppController],
   providers: [AppService],
