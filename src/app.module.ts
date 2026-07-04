@@ -6,6 +6,8 @@ import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { validateEnv } from './common/config/env.validation';
+import { WorkoutPlansModule } from './workout-plans/workout-plans.module';
+import { ExercisesModule } from './exercises/exercises.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { validateEnv } from './common/config/env.validation';
     AuthModule,
     UserModule,
     PrismaModule,
+    WorkoutPlansModule,
+    ExercisesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

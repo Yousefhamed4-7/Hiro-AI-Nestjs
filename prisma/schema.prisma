@@ -14,8 +14,167 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  username String @unique
-  password String
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+enum PlanGoal {
+  LW
+  BM
+  MC
+  RI
+}
+
+model MealPlanCategory {
+  id             Int        @id @default(autoincrement())
+  name_en        String     @unique
+  name_ar        String     @unique
+  description_en String     @db.Text
+  description_ar String     @db.Text
+  image          String     @default("")
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  mealPlans      MealPlan[]
+}
+
+model MealPlan {
+  id              Int              @id @default(autoincrement())
+  plan_code       String           @unique
+  name            String
+  goal            PlanGoal
+  target_calories Float
+  images          String[]         @default([])
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  categoryId      Int
+  category        MealPlanCategory @relation(fields: [categoryId], references: [id])
+  meals           MealPlanItem[]
+}
+
+model MealPlanItem {
+  mealPlanId Int
+  mealPlan   MealPlan @relation(fields: [mealPlanId], references: [id], onDelete: Cascade)
+
+  mealItemId Int
+  mealItem   MealItem @relation(fields: [mealItemId], references: [id], onDelete: Cascade)
+
+  @@id([mealPlanId, mealItemId])
+}
+
+model MealItem {
+  id            Int                  @id @default(autoincrement())
+  meal_name     String
+  calories      Float
+  protein_g     Float
+  carbs_g       Float
+  fat_g         Float
+  images        String[]             @default([])
+  videos        String[]             @default([])
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  ingredients   MealItemIngredient[]
+  mealPlanItems MealPlanItem[]
+}
+
+model MealItemIngredient {
+  id Int @id @default(autoincrement())
+
+  mealItemId   Int
+  mealItem     MealItem   @relation(fields: [mealItemId], references: [id], onDelete: Cascade)
+  ingredientId Int
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+}
+
+model Ingredient {
+  id        Int      @id @default(autoincrement())
+  name_en   String   @unique
+  name_ar   String   @unique
+  quantity  Float
+  unit      String
+  calories  Float
+  protein_g Float
+  carbs_g   Float
+  fat_g     Float
+  image     String?  @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  meals MealItemIngredient[]
+}
+
+enum Difficulty {
+  beginner
+  intermediate
+  advanced
+}
+
+enum GenderPreference {
+  male
+  female
+  any
+}
+
+model WorkoutPlanCategory {
+  id             Int           @id @default(autoincrement())
+  name_en        String        @unique
+  name_ar        String        @unique
+  description_en String        @db.Text
+  description_ar String        @db.Text
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  workoutPlans   WorkoutPlan[]
+}
+
+model WorkoutPlan {
+  id                   Int              @id @default(autoincrement())
+  workout_code         String           @unique
+  name                 String
+  goal                 PlanGoal
+  difficulty           Difficulty
+  duration_minutes     Int
+  target_muscle_groups String[]
+  estimated_calories   Float
+  gender_preference    GenderPreference
+  description          String           @db.Text
+  exercise_count       Int
+  images               String[]         @default([])
+  videos               String[]         @default([])
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+
+  categoryId           Int
+  category             WorkoutPlanCategory    @relation(fields: [categoryId], references: [id])
+  workoutPlanExercises WorkoutPlanExercises[]
+}
+
+model WorkoutPlanExercises {
+  id            Int         @id @default(autoincrement())
+  workoutPlanId Int
+  workoutPlan   WorkoutPlan @relation(fields: [workoutPlanId], references: [id], onDelete: Cascade)
+
+  exerciseId Int
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  exercise_order Int
+}
+
+model Exercise {
+  id               Int      @id @default(autoincrement())
+  exercise_order   Int
+  exercise_name    String
+  sets             Int
+  reps             String
+  duration_seconds Int
+  rest_seconds     Int
+  notes            String   @db.Text
+  images           String[] @default([])
+  videos           String[] @default([])
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  workoutPlanExercises WorkoutPlanExercises[]
 }
