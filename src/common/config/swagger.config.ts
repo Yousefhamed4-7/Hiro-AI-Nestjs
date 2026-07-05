@@ -12,15 +12,6 @@ export const swaggerConfig = new DocumentBuilder()
     },
     'access-token', // This is the security scheme name
   )
-  .addBearerAuth(
-    {
-      type: 'http',
-      scheme: 'bearer',
-      bearerFormat: 'JWT',
-      description: 'Enter your refresh JWT token',
-    },
-    'refresh-token',
-  )
   .addGlobalParameters({
     name: 'Accept-Language',
     in: 'header',

@@ -11,6 +11,9 @@ export class UserService {
       where: {
         OR: [{ email }, { username }],
       },
+      omit: {
+        password: true,
+      },
     });
   }
 
@@ -20,6 +23,9 @@ export class UserService {
 
     return await this.prismaService.user.create({
       data: data,
+      omit: {
+        password: true,
+      },
     });
   }
 
