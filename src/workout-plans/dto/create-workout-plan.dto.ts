@@ -8,6 +8,8 @@ import {
   IsOptional,
   ValidateNested,
   Min,
+  IsDefined,
+  ArrayNotEmpty,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
@@ -35,12 +37,14 @@ class PlanExerciseDto {
   @ApiProperty({ example: 1, description: 'Exercise ID' })
   @IsInt()
   @IsNotEmpty()
+  @IsDefined()
   exerciseId!: number;
 
   @ApiProperty({ example: 1, description: 'Order of exercise in the plan' })
   @IsInt()
   @Min(1)
   @IsNotEmpty()
+  @IsDefined()
   exercise_order!: number;
 }
 
@@ -48,6 +52,7 @@ export class CreateWorkoutPlanDto {
   @ApiProperty({ example: 'WP001', description: 'Unique workout plan code' })
   @IsString()
   @IsNotEmpty()
+  @IsDefined()
   workout_code!: string;
 
   @ApiProperty({
@@ -56,6 +61,7 @@ export class CreateWorkoutPlanDto {
   })
   @IsString()
   @IsNotEmpty()
+  @IsDefined()
   name!: string;
 
   @ApiProperty({
@@ -65,6 +71,7 @@ export class CreateWorkoutPlanDto {
   })
   @IsEnum(WorkoutGoal)
   @IsNotEmpty()
+  @IsDefined()
   goal!: 'LW' | 'BM' | 'MC' | 'RI';
 
   @ApiProperty({
@@ -74,12 +81,14 @@ export class CreateWorkoutPlanDto {
   })
   @IsEnum(DifficultyLevel)
   @IsNotEmpty()
+  @IsDefined()
   difficulty!: 'beginner' | 'intermediate' | 'advanced';
 
   @ApiProperty({ example: 60, description: 'Duration in minutes' })
   @IsInt()
   @Min(1)
   @IsNotEmpty()
+  @IsDefined()
   duration_minutes!: number;
 
   @ApiProperty({
@@ -89,12 +98,14 @@ export class CreateWorkoutPlanDto {
   @IsArray()
   @IsString({ each: true })
   @IsNotEmpty()
+  @IsDefined()
   target_muscle_groups!: string[];
 
   @ApiProperty({ example: 300, description: 'Estimated calories burned' })
   @IsNumber()
   @Min(0)
   @IsNotEmpty()
+  @IsDefined()
   estimated_calories!: number;
 
   @ApiProperty({
@@ -104,6 +115,7 @@ export class CreateWorkoutPlanDto {
   })
   @IsEnum(GenderPreference)
   @IsNotEmpty()
+  @IsDefined()
   gender_preference!: 'male' | 'female' | 'any';
 
   @ApiProperty({
@@ -112,12 +124,14 @@ export class CreateWorkoutPlanDto {
   })
   @IsString()
   @IsNotEmpty()
+  @IsDefined()
   description!: string;
 
   @ApiProperty({ example: 5, description: 'Number of exercises' })
   @IsInt()
   @Min(0)
   @IsNotEmpty()
+  @IsDefined()
   exercise_count!: number;
 
   @ApiProperty({
@@ -143,6 +157,7 @@ export class CreateWorkoutPlanDto {
   @ApiProperty({ example: 1, description: 'Category ID' })
   @IsInt()
   @IsNotEmpty()
+  @IsDefined()
   categoryId!: number;
 
   @ApiProperty({
@@ -151,6 +166,7 @@ export class CreateWorkoutPlanDto {
     required: false,
   })
   @IsArray()
+  @ArrayNotEmpty()
   @ValidateNested({ each: true })
   @Type(() => PlanExerciseDto)
   exercises?: PlanExerciseDto[];
