@@ -40,4 +40,9 @@ export const SWAGGER_CDN_OPTIONS = {
     'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.js',
     'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.js',
   ],
+  swaggerOptions: {
+    defaultModelsExpandDepth: 1,
+    docExpansion: 'list',
+    persistAuthorization: true,
+  },
 };
