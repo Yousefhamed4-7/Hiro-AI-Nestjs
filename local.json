@@ -1,0 +1,352 @@
+{
+    "components": {
+        "securitySchemes": {
+            "access-token": {
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "type": "http",
+                "description": "Enter your JWT token"
+            },
+            "refresh-token": {
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "type": "http",
+                "description": "Enter your refresh JWT token"
+            }
+        },
+        "schemas": {
+            "SignupDto": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "minLength": 8
+                    }
+                },
+                "required": [
+                    "username",
+                    "email",
+                    "password"
+                ]
+            },
+            "LoginDto": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "email",
+                    "password"
+                ]
+            },
+            "RefreshDto": {
+                "type": "object",
+                "properties": {
+                    "refreshToken": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "refreshToken"
+                ]
+            },
+            "PlanExerciseDto": {
+                "type": "object",
+                "properties": {
+                    "exerciseId": {
+                        "type": "number"
+                    },
+                    "exercise_order": {
+                        "type": "number",
+                        "minimum": 1
+                    }
+                },
+                "required": [
+                    "exerciseId",
+                    "exercise_order"
+                ]
+            },
+            "CreateWorkoutPlanDto": {
+                "type": "object",
+                "properties": {
+                    "workout_code": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "goal": {
+                        "type": "string",
+                        "enum": [
+                            "LW",
+                            "BM",
+                            "MC",
+                            "RI"
+                        ]
+                    },
+                    "difficulty": {
+                        "type": "string",
+                        "enum": [
+                            "intermediate",
+                            "beginner",
+                            "advanced"
+                        ]
+                    },
+                    "duration_minutes": {
+                        "type": "number",
+                        "minimum": 1
+                    },
+                    "target_muscle_groups": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "estimated_calories": {
+                        "type": "number",
+                        "minimum": 0
+                    },
+                    "gender_preference": {
+                        "type": "string",
+                        "enum": [
+                            "any",
+                            "male",
+                            "female"
+                        ]
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "exercise_count": {
+                        "type": "number",
+                        "minimum": 0
+                    },
+                    "images": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "videos": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "categoryId": {
+                        "type": "number"
+                    },
+                    "exercises": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PlanExerciseDto"
+                        }
+                    }
+                },
+                "required": [
+                    "workout_code",
+                    "name",
+                    "goal",
+                    "difficulty",
+                    "duration_minutes",
+                    "target_muscle_groups",
+                    "estimated_calories",
+                    "gender_preference",
+                    "description",
+                    "exercise_count",
+                    "categoryId"
+                ]
+            },
+            "UpdateWokroutPlanDto": {
+                "type": "object",
+                "properties": {
+                    "workout_code": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "goal": {
+                        "enum": [
+                            "LW",
+                            "BM",
+                            "MC",
+                            "RI"
+                        ],
+                        "type": "string"
+                    },
+                    "difficulty": {
+                        "enum": [
+                            "intermediate",
+                            "beginner",
+                            "advanced"
+                        ],
+                        "type": "string"
+                    },
+                    "duration_minutes": {
+                        "type": "number",
+                        "minimum": 1
+                    },
+                    "target_muscle_groups": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "estimated_calories": {
+                        "type": "number",
+                        "minimum": 0
+                    },
+                    "gender_preference": {
+                        "enum": [
+                            "any",
+                            "male",
+                            "female"
+                        ],
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "exercise_count": {
+                        "type": "number",
+                        "minimum": 0
+                    },
+                    "images": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "videos": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "categoryId": {
+                        "type": "number"
+                    },
+                    "exercises": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PlanExerciseDto"
+                        }
+                    }
+                }
+            },
+            "MealItemDto": {
+                "type": "object",
+                "properties": {
+                    "mealItemId": {
+                        "type": "number"
+                    }
+                },
+                "required": [
+                    "mealItemId"
+                ]
+            },
+            "CreateMealPlansDto": {
+                "type": "object",
+                "properties": {
+                    "plan_code": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "goal": {
+                        "type": "string",
+                        "enum": [
+                            "LW",
+                            "BM",
+                            "MC",
+                            "RI"
+                        ]
+                    },
+                    "target_calories": {
+                        "type": "number",
+                        "minimum": 0
+                    },
+                    "images": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "categoryId": {
+                        "type": "number",
+                        "minimum": 1
+                    },
+                    "meals": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/MealItemDto"
+                        }
+                    }
+                },
+                "required": [
+                    "plan_code",
+                    "name",
+                    "goal",
+                    "target_calories",
+                    "categoryId",
+                    "meals"
+                ]
+            },
+            "UpdateMealPlanDto": {
+                "type": "object",
+                "properties": {
+                    "plan_code": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "goal": {
+                        "enum": [
+                            "LW",
+                            "BM",
+                            "MC",
+                            "RI"
+                        ],
+                        "type": "string"
+                    },
+                    "target_calories": {
+                        "type": "number",
+                        "minimum": 0
+                    },
+                    "images": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "categoryId": {
+                        "type": "number",
+                        "minimum": 1
+                    },
+                    "meals": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/MealItemDto"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
