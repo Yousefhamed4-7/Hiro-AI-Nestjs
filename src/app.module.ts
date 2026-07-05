@@ -9,6 +9,8 @@ import { validateEnv } from './common/config/env.validation';
 import { WorkoutPlansModule } from './workout-plans/workout-plans.module';
 import { ExercisesModule } from './exercises/exercises.module';
 import { MealPlansModule } from './meal-plans/meal-plans.module';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -20,6 +22,12 @@ import { MealPlansModule } from './meal-plans/meal-plans.module';
         abortEarly: true,
       },
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 100,
+      },
+    ]),
     AuthModule,
     UserModule,
     PrismaModule,
@@ -28,6 +36,12 @@ import { MealPlansModule } from './meal-plans/meal-plans.module';
     MealPlansModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}
