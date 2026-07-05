@@ -1,5 +1,5 @@
 services:
-  postgres:
+  postgres_db:
     image: postgres:16-alpine
     container_name: nest_postgres_db
     restart: always
@@ -11,6 +11,25 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  pgbouncer_pooler:
+    image: edoburu/pgbouncer:latest
+    container_name: local_pgbouncer
+    environment:
+      - DB_USER=myuser
+      - DB_PASSWORD=mysecretpassword
+      - DB_HOST=postgres_db    
+      - DB_PORT=5432
+      - DB_NAME=hiro_ai
+      - AUTH_TYPE=scram-sha-256
+      - POOL_MODE=session  
+      - MAX_CLIENT_CONN=100    
+      - DEFAULT_POOL_SIZE=20   
+      - MAX_PREPARED_STATEMENTS=100
+    ports:
+      - "6432:6432" # Pooled connection port
+    depends_on:
+      - postgres_db
 
 volumes:
   postgres_data: # ◄ This creates the separate, persistent volume on your machine

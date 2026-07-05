@@ -1,10 +1,3 @@
-// const prisma = new PrismaClient({
-//   adapter: new PrismaPg({
-//     connectionString:
-//       'postgresql://myuser:mysecretpassword@localhost:5432/hiro_ai?schema=public',
-//   }),
-// });
-
 import { PrismaPg } from '@prisma/adapter-pg';
 import 'dotenv/config';
 import {
