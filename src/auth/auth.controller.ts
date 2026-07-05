@@ -3,11 +3,13 @@ import { SignupDto } from './dto/signup.dto';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RefreshDto } from './dto/refresh.dto';
+import { Translate } from '../common/decorators/translate.decorator';
 
-@Controller('auth')
+@Controller('api/v2/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
   @Post('signup')
+  @Translate('auth.signup')
   async signup(@Body() signupDto: SignupDto) {
     const data = await this.authService.signup(signupDto);
     return {
@@ -19,6 +21,7 @@ export class AuthController {
   }
 
   @Post('login')
+  @Translate('auth.login')
   async login(@Body() loginDto: LoginDto) {
     const data = await this.authService.login(loginDto);
 
@@ -31,6 +34,7 @@ export class AuthController {
   }
 
   @Post('refresh')
+  @Translate('token.refreshed')
   async refresh(@Body() refreshDto: RefreshDto) {
     const data = await this.authService.refresh(refreshDto);
     return {

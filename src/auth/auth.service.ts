@@ -27,11 +27,11 @@ export class AuthService {
     );
 
     if (userExists) {
-      if (userExists.email == email) {
-        throw new ConflictException('Email is already in use');
-      }
       if (userExists.username == username) {
-        throw new ConflictException('username is already taken');
+        throw new ConflictException('auth.userExists.username');
+      }
+      if (userExists.email == email) {
+        throw new ConflictException('auth.userExists.email');
       }
     }
 
@@ -70,7 +70,7 @@ export class AuthService {
     const user = await this.userService.findByUsernameOrEmail('', email);
 
     if (!user) {
-      throw new UnauthorizedException('Invalid Credentials');
+      throw new UnauthorizedException('auth.login.invalidCredentials');
     }
 
     const validPassword = await this.userService.isValidPassword(
@@ -78,7 +78,7 @@ export class AuthService {
       user.password,
     );
     if (!validPassword) {
-      throw new UnauthorizedException('Invalid Credentials');
+      throw new UnauthorizedException('auth.login.invalidCredentials');
     }
 
     const { accessToken, refreshToken } = await this.generateTokens(user.id);
@@ -104,9 +104,9 @@ export class AuthService {
     } catch (err: any) {
       Logger.log(err);
       if (err.name == 'TokenExpiredError') {
-        throw new UnauthorizedException('Token expired');
+        throw new UnauthorizedException('token.expired');
       }
-      throw new UnauthorizedException('Invalid token');
+      throw new UnauthorizedException('token.invalid');
     }
   }
 }

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   InternalServerErrorException,
@@ -125,7 +126,7 @@ export class MealPlansService {
     });
 
     if (!mealPlan) {
-      throw new NotFoundException('Meal plan not found');
+      throw new NotFoundException('meal-plans.notFound');
     }
 
     return {
@@ -193,16 +194,29 @@ export class MealPlansService {
     } catch (err: any) {
       Logger.log(err);
       if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        const metaData = err.meta as any;
         if (err.code === 'P2002') {
-          const metaData = err.meta as any;
           const fields = metaData.driverAdapterError.cause.constraint.fields;
 
-          throw new ConflictException(
-            `A workout plan with this ' ${fields.join(' ')} ' already exists`,
+          throw new ConflictException({
+            message: `workout-plans.exists`,
+            fields,
+          });
+        }
+        if (err.code === 'P2003') {
+          const message = err.message;
+
+          const field = message.slice(
+            message.indexOf('constraint: ') + 'constraint: '.length,
+            message.length,
           );
+          throw new BadRequestException({
+            message: 'meal-plans.foreignKeyFail',
+            fields: [field],
+          });
         }
         throw new InternalServerErrorException(
-          'Something went wrong with the ORM while creating the workout plan',
+          'Something went wrong with the ORM while creating the meal plan',
           {
             description: err.message,
           },
@@ -210,7 +224,7 @@ export class MealPlansService {
       }
 
       throw new InternalServerErrorException(
-        'Something went wrong while creating workout plan',
+        'Something went wrong while creating meal plan',
       );
     }
   }
@@ -223,7 +237,7 @@ export class MealPlansService {
     });
 
     if (!exists) {
-      throw new NotFoundException('Meal plan not found');
+      throw new NotFoundException('meal-plans.notFound');
     }
     try {
       const updatedPlan = await this.prismaService.$transaction(async (tx) => {
@@ -304,12 +318,26 @@ export class MealPlansService {
           const metaData = err.meta as any;
           const fields = metaData.driverAdapterError.cause.constraint.fields;
 
-          throw new ConflictException(
-            `A workout plan with this ' ${fields.join(' ')} ' already exists`,
-          );
+          throw new ConflictException({
+            message: `meal-plans.exists`,
+            fields,
+          });
         }
+        if (err.code === 'P2003') {
+          const message = err.message;
+
+          const field = message.slice(
+            message.indexOf('constraint: ') + 'constraint: '.length,
+            message.length,
+          );
+          throw new BadRequestException({
+            message: 'meal-plans.foreignKeyFail',
+            fields: [field],
+          });
+        }
+
         throw new InternalServerErrorException(
-          'Something went wrong with the ORM while creating the workout plan',
+          'Something went wrong with the ORM while creating the meal plan',
           {
             description: err.message,
           },
@@ -317,7 +345,7 @@ export class MealPlansService {
       }
 
       throw new InternalServerErrorException(
-        'Something went wrong while creating workout plan',
+        'Something went wrong while creating meal plan',
       );
     }
   }

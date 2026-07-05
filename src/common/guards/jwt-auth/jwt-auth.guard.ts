@@ -21,7 +21,7 @@ export class JwtAuthGuard implements CanActivate {
     const authHeader = request.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      throw new UnauthorizedException('Token not found');
+      throw new UnauthorizedException('token.missing');
     }
 
     const token = authHeader.split(' ')[1];
@@ -33,9 +33,9 @@ export class JwtAuthGuard implements CanActivate {
       return true;
     } catch (err: any) {
       if (err.name == 'TokenExpiredError') {
-        throw new UnauthorizedException('Token expired');
+        throw new UnauthorizedException('token.expired');
       }
-      throw new UnauthorizedException('Invalid Token');
+      throw new UnauthorizedException('token.invalid');
     }
   }
 }

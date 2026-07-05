@@ -1,0 +1,102 @@
+{
+    "auth.signup": {
+        "en": "Account created successfully",
+        "ar": "تم إنشاء الحساب بنجاح"
+    },
+    "auth.userExists.email": {
+        "en": "Email already in use",
+        "ar": "البريد الإلكتروني مستخدم بالفعل"
+    },
+    "auth.userExists.username": {
+        "en": "Username already taken",
+        "ar": "اسم المستخدم مستخدم بالفعل"
+    },
+    "auth.login": {
+        "en": "Logged in successfully",
+        "ar": "تم تسجيل الدخول بنجاح"
+    },
+    "auth.login.invalidCredentials": {
+        "en": "Invalid credentials",
+        "ar": "بيانات الدخول غير صحيحة"
+    },
+    "token.refreshed": {
+        "en": "Token refreshed successfully",
+        "ar": "تم تحديث التوكن بنجاح"
+    },
+    "token.missing": {
+        "en": "Token missing",
+        "ar": "التوكن مفقود"
+    },
+    "token.expired": {
+        "en": "Token expired",
+        "ar": "انتهت صلاحية التوكن"
+    },
+    "token.invalid": {
+        "en": "Invalid token",
+        "ar": "التوكن غير صحيح"
+    },
+    "workout-plans.getAll": {
+        "en": "Workout-plans fetched successfully",
+        "ar": "تم جلب خطط التمرين بنجاح"
+    },
+    "workout-plans.getOne": {
+        "en": "Wokrout-plan fetched successfully",
+        "ar": "تم جلب خطة التمرين بنجاح"
+    },
+    "workout-plans.create": {
+        "en": "Workout-plan created successfully",
+        "ar": "تم إنشاء خطة التمرين بنجاح"
+    },
+    "workout-plans.update": {
+        "en": "Workout-plan updated successfully",
+        "ar": "تم تحديث خطة التمرين بنجاح"
+    },
+    "workout-plans.delete": {
+        "en": "Workout-plan deleted successfully",
+        "ar": "تم حذف خطة التمرين بنجاح"
+    },
+    "workout-plans.notFound": {
+        "en": "Workout plan not found",
+        "ar": "خطة التمرين غير موجودة"
+    },
+    "workout-plans.exists": {
+        "en": "A workout plan with this ' {fields} ' already exists.",
+        "ar": "هناك خطة تمرين تحتوي على ' {fields} ' بالفعل."
+    },
+    "workout-plans.foreignKeyFail": {
+        "en": "Invalid reference: {fields} does not exist",
+        "ar": "مرجع غير صحيح: {fields} غير موجود"
+    },
+    "meal-plans.foreignKeyFail": {
+        "en": "Invalid reference: {fields} does not exist",
+        "ar": "مرجع غير صحيح: {fields} غير موجود"
+    },
+    "meal-plans.getAll": {
+        "en": "Meal-plans fetched successfully",
+        "ar": "تم جلب خطط الوجبات بنجاح"
+    },
+    "meal-plans.getOne": {
+        "en": "Meal-plan fetched successfully",
+        "ar": "تم جلب خطة الوجبة بنجاح"
+    },
+    "meal-plans.create": {
+        "en": "Meal-plan created successfully",
+        "ar": "تم إنشاء خطة الوجبة بنجاح"
+    },
+    "meal-plans.update": {
+        "en": "Meal-plan updated successfully",
+        "ar": "تم تحديث خطة الوجبة بنجاح"
+    },
+    "meal-plans.delete": {
+        "en": "Meal-plan deleted successfully",
+        "ar": "تم حذف خطة الوجبة بنجاح"
+    },
+    "meal-plans.notFound": {
+        "en": "Meal plan not found",
+        "ar": "خطة الوجبة غير موجودة"
+    },
+    "meal-plans.exists": {
+        "en": "A meal plan with this ' {fields} ' already exists.",
+        "ar": "هناك خطة الوجبة تحتوي على ' {fields} ' بالفعل."
+    }
+}

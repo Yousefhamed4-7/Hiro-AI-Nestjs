@@ -14,7 +14,6 @@ import {
 import { CreateWorkoutPlanDto } from './dto/create-workout-plan.dto';
 import { Prisma } from '../generated/prisma/client';
 import { UpdateWokroutPlanDto } from './dto/update-workout-plan.dto';
-import { treeifyError } from 'zod';
 
 @Injectable()
 export class WorkoutPlansService {
@@ -77,7 +76,7 @@ export class WorkoutPlansService {
       },
     });
     if (!workoutPlan) {
-      throw new NotFoundException('Workout plan not found');
+      throw new NotFoundException('workout-plans.notFound');
     }
 
     const formattedWorkoutPlan = this.formatWorkoutPlan(
@@ -126,15 +125,27 @@ export class WorkoutPlansService {
 
       return formattedWorkoutPlan;
     } catch (err: any) {
-      Logger.log(err);
       if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        const metaData = err.meta as any;
         if (err.code === 'P2002') {
-          const metaData = err.meta as any;
           const fields = metaData.driverAdapterError.cause.constraint.fields;
 
-          throw new ConflictException(
-            `A workout plan with this ' ${fields.join(' ')} ' already exists`,
+          throw new ConflictException({
+            message: `workout-plans.exists`,
+            fields,
+          });
+        }
+        if (err.code === 'P2003') {
+          const message = err.message;
+
+          const field = message.slice(
+            message.indexOf('constraint: ') + 'constraint: '.length,
+            message.length,
           );
+          throw new BadRequestException({
+            message: 'workout-plans.foreignKeyFail',
+            fields: [field],
+          });
         }
         throw new InternalServerErrorException(
           'Something went wrong with the ORM while creating the workout plan',
@@ -158,58 +169,93 @@ export class WorkoutPlansService {
     });
 
     if (!planExists) {
-      throw new NotFoundException(`Workout plan with ID ${id} was not found`);
+      throw new NotFoundException(`workout-plans.notFound`);
     }
 
     const { exercises, ...planData } = updateWorkoutPlanDto;
+    try {
+      const updatedPlan = await this.prismaService.$transaction(async (tx) => {
+        //if user wants to update exercises wipe the many-many table for a cleaner input
+        if (exercises) {
+          await tx.workoutPlanExercises.deleteMany({
+            where: { workoutPlanId: id },
+          });
+        }
 
-    const updatedPlan = await this.prismaService.$transaction(async (tx) => {
-      //if user wants to update exercises wipe the many-many table for a cleaner input
-      if (exercises) {
-        await tx.workoutPlanExercises.deleteMany({
-          where: { workoutPlanId: id },
+        const updated = await tx.workoutPlan.update({
+          where: { id },
+          data: {
+            ...planData,
+            ...(exercises && {
+              workoutPlanExercises: {
+                create: exercises.map((exe) => ({
+                  exerciseId: exe.exerciseId,
+                  exercise_order: exe.exercise_order,
+                })),
+              },
+            }),
+          },
+          omit: {
+            categoryId: true,
+          },
+          include: {
+            category: {
+              select: {
+                id: true,
+                name_ar: true,
+                name_en: true,
+              },
+            },
+            workoutPlanExercises: {
+              include: {
+                exercise: true,
+              },
+            },
+          },
         });
+        return updated;
+      });
+
+      const parsedPlan = this.formatWorkoutPlan(
+        updatedPlan as UnformattedWorkoutPlanInterface,
+      );
+
+      return parsedPlan;
+    } catch (err: any) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        const metaData = err.meta as any;
+        if (err.code === 'P2002') {
+          const fields = metaData.driverAdapterError.cause.constraint.fields;
+
+          throw new ConflictException({
+            message: `workout-plans.exists`,
+            fields,
+          });
+        }
+        if (err.code === 'P2003') {
+          const message = err.message;
+
+          const field = message.slice(
+            message.indexOf('constraint: ') + 'constraint: '.length,
+            message.length,
+          );
+          throw new BadRequestException({
+            message: 'workout-plans.foreignKeyFail',
+            fields: [field],
+          });
+        }
+        throw new InternalServerErrorException(
+          'Something went wrong with the ORM while creating the workout plan',
+          {
+            description: err.message,
+          },
+        );
       }
 
-      const updated = await tx.workoutPlan.update({
-        where: { id },
-        data: {
-          ...planData,
-          ...(exercises && {
-            workoutPlanExercises: {
-              create: exercises.map((exe) => ({
-                exerciseId: exe.exerciseId,
-                exercise_order: exe.exercise_order,
-              })),
-            },
-          }),
-        },
-        omit: {
-          categoryId: true,
-        },
-        include: {
-          category: {
-            select: {
-              id: true,
-              name_ar: true,
-              name_en: true,
-            },
-          },
-          workoutPlanExercises: {
-            include: {
-              exercise: true,
-            },
-          },
-        },
-      });
-      return updated;
-    });
-
-    const parsedPlan = this.formatWorkoutPlan(
-      updatedPlan as UnformattedWorkoutPlanInterface,
-    );
-
-    return parsedPlan;
+      throw new InternalServerErrorException(
+        'Something went wrong while creating workout plan',
+      );
+    }
   }
 
   async delete(id: number) {
@@ -220,12 +266,10 @@ export class WorkoutPlansService {
     } catch (err) {
       if (err instanceof Prisma.PrismaClientKnownRequestError) {
         if (err.code === 'P2025') {
-          throw new NotFoundException(
-            `Workout plan with ID ${id} does not exist.`,
-          );
+          throw new NotFoundException(`workout-plans.notFound`);
         }
         throw new InternalServerErrorException(
-          'Something went wrong with the ORM while creating the workout plan',
+          'Something went wrong while deleting the workout plan',
           {
             description: err.message,
           },
