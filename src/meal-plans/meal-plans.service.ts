@@ -356,9 +356,7 @@ export class MealPlansService {
     } catch (err: any) {
       if (err instanceof Prisma.PrismaClientKnownRequestError) {
         if (err.code === 'P2025') {
-          throw new NotFoundException(
-            `Meal plan with ID ${id} does not exist.`,
-          );
+          throw new NotFoundException(`meal-plans.notFound`);
         }
         throw new InternalServerErrorException(
           'Something went wrong with the ORM while creating the meal plan',

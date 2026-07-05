@@ -32,3 +32,17 @@ export const swaggerConfig = new DocumentBuilder()
       enum: ['en', 'ar'], // Shows a dropdown list in the Swagger UI
     },
   });
+
+export const SWAGGER_CDN_OPTIONS = {
+  customCssUrl:
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css',
+  customJs: [
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.js',
+  ],
+  swaggerOptions: {
+    defaultModelsExpandDepth: 1,
+    docExpansion: 'list',
+    persistAuthorization: true,
+  },
+};
