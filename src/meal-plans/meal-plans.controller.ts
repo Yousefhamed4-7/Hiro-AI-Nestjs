@@ -13,8 +13,10 @@ import { MealPlansService } from './meal-plans.service';
 import { JwtAuthGuard } from '../common/guards/jwt-auth/jwt-auth.guard';
 import { CreateMealPlansDto } from './dto/create-meal-plans.dto';
 import { UpdateMealPlanDto } from './dto/update-meal-plans.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('meal-plans')
+@ApiBearerAuth('access-token')
 @UseGuards(JwtAuthGuard)
 export class MealPlansController {
   constructor(private readonly mealPlansService: MealPlansService) {}

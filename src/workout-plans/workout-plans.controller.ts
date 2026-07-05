@@ -13,8 +13,10 @@ import { WorkoutPlansService } from './workout-plans.service';
 import { CreateWorkoutPlanDto } from './dto/create-workout-plan.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth/jwt-auth.guard';
 import { UpdateWokroutPlanDto } from './dto/update-workout-plan.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @UseGuards(JwtAuthGuard)
+@ApiBearerAuth('access-token')
 @Controller('workout-plans')
 export class WorkoutPlansController {
   constructor(private readonly workoutPlansService: WorkoutPlansService) {}

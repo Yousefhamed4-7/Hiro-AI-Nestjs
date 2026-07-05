@@ -14,6 +14,7 @@ import {
 import { CreateWorkoutPlanDto } from './dto/create-workout-plan.dto';
 import { Prisma } from '../generated/prisma/client';
 import { UpdateWokroutPlanDto } from './dto/update-workout-plan.dto';
+import { treeifyError } from 'zod';
 
 @Injectable()
 export class WorkoutPlansService {
@@ -21,7 +22,17 @@ export class WorkoutPlansService {
 
   async getAll() {
     const result = await this.prismaService.workoutPlan.findMany({
+      omit: {
+        categoryId: true,
+      },
       include: {
+        category: {
+          select: {
+            id: true,
+            name_ar: true,
+            name_en: true,
+          },
+        },
         workoutPlanExercises: {
           include: {
             exercise: true,
@@ -47,7 +58,17 @@ export class WorkoutPlansService {
       where: {
         id,
       },
+      omit: {
+        categoryId: true,
+      },
       include: {
+        category: {
+          select: {
+            id: true,
+            name_ar: true,
+            name_en: true,
+          },
+        },
         workoutPlanExercises: {
           include: {
             exercise: true,
@@ -80,7 +101,17 @@ export class WorkoutPlansService {
             })),
           },
         },
+        omit: {
+          categoryId: true,
+        },
         include: {
+          category: {
+            select: {
+              id: true,
+              name_ar: true,
+              name_en: true,
+            },
+          },
           workoutPlanExercises: {
             include: {
               exercise: true,
@@ -153,7 +184,17 @@ export class WorkoutPlansService {
             },
           }),
         },
+        omit: {
+          categoryId: true,
+        },
         include: {
+          category: {
+            select: {
+              id: true,
+              name_ar: true,
+              name_en: true,
+            },
+          },
           workoutPlanExercises: {
             include: {
               exercise: true,

@@ -29,13 +29,13 @@ export interface WorkoutPlanInterface {
   videos: string[];
   createdAt: Date;
   updatedAt: Date;
-  categoryId: number;
+  categoryId?: number;
   exercises: ExercisesInterface[];
 }
 
 export interface UnformattedWorkoutPlanInterface extends Omit<
   WorkoutPlanInterface,
-  'exercises'
+  'exercises' | 'categoryId'
 > {
   workoutPlanExercises: {
     exerciseId: number;
